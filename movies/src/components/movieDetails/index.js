@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useQuery } from "react-query";
+import Grid from "@mui/material/Grid2";
+import { getMovieRecommendations } from '../../api/tmdb-api';
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -8,7 +11,9 @@ import NavigationIcon from "@mui/icons-material/Navigation";
 import Fab from "@mui/material/Fab";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
-import MovieReviews from "../movieReviews"
+import Spinner from '../spinner'
+import MovieReviews from "../movieReviews";
+import SimpleMovieCard from "../simpleMovieCard";
 
 const root = {
     display: "flex",
@@ -20,8 +25,21 @@ const root = {
 };
 const chip = { margin: 0.5 };
 
-const MovieDetails = ({ movie }) => {  // Don't miss this!
+const MovieDetails = ({ movie }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const {data: recommendations, isRecLoading, isRecError} = useQuery(
+    ["movieRecommendation", movie.id], () => getMovieRecommendations(movie.id)
+  );
+  const recommendationResult = recommendations?.results || [];
+
+  if (isRecLoading) {
+    return <Spinner />;
+  } 
+
+  if ( isRecError) {
+    return <Typography>Error while loading recommendations</Typography>
+  }
 
   return (
     <>
@@ -71,6 +89,20 @@ const MovieDetails = ({ movie }) => {  // Don't miss this!
           </li>
         ))}
       </Paper>
+
+      <Paper>
+        <Typography variant="h5" gutterBottom>
+          Recommendations:
+        </Typography>
+          <Grid container spacing={2}>
+            {recommendationResult.slice(0, 15).map((movie) => (
+          <Grid item key={movie.id} xs={12} sm={6} md={4} lg={3}>
+            <SimpleMovieCard movie={movie} />
+          </Grid>
+            ))}
+          </Grid>
+      </Paper>
+
       <Fab
         color="secondary"
         variant="extended"
