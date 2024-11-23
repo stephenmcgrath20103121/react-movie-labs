@@ -13,7 +13,7 @@ import img from '../../images/pexels-dziana-hasanbekava-5480827.jpg'
 import { getGenres } from "../../api/tmdb-api";
 import { useQuery } from "react-query";
 import Spinner from '../spinner';
-import { Rating } from "@mui/material";
+import { Rating, Slider } from "@mui/material";
 
 const formControl = 
   {
@@ -53,6 +53,10 @@ export default function FilterMoviesCard(props) {
 
   const handleRatingChange = (e, value) => {
     handleChange(e, "rating", value)
+  }
+
+  const handlePopularityChange = (e, value) => {
+    handleChange(e, "popularity", value)
   }
 
   return (
@@ -101,6 +105,17 @@ export default function FilterMoviesCard(props) {
           precision={1}
           max={10}
           onChange={handleRatingChange}
+          />
+        <Typography variant="body1" component="p">
+          Maximum Popularity
+        </Typography>
+        <Slider 
+          step={100}
+          marks
+          min={500}
+          max={4000}
+          valueLabelDisplay="auto"
+          onChange={handlePopularityChange}
           />
       </CardContent>
       <CardMedia
