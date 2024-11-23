@@ -3,30 +3,30 @@ import MovieHeader from "../headerMovie";
 import Grid from "@mui/material/Grid2";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import { getMovieImages } from "../../api/tmdb-api";
+import { getActorImages } from "../../api/tmdb-api";
 import { useQuery } from "react-query";
 import Spinner from '../spinner'
 
-const TemplateMoviePage = ({ movie, children }) => {
+const TemplateActorPage = ({ actor, children }) => {
     const { data , error, isLoading, isError } = useQuery(
-        ["images", { id: movie.id }],
-        getMovieImages
-      );
-    
-      if (isLoading) {
-        return <Spinner />;
-      }
-    
-      if (isError) {
-        return <h1>{error.message}</h1>;
-      }
-      const images = data.posters 
+      ["images", { id: actor.id }],
+      getActorImages
+    );
 
-  return (
-    <>
-      <MovieHeader movie={movie} />
+    if (isLoading) {
+      return <Spinner />;
+    }
 
-      <Grid container spacing={5} style={{ padding: "15px" }}>
+    if (isError) {
+      return <h1>{error.message}</h1>;
+    }
+    const images = data.profiles
+  
+    return (
+        <>
+        <MovieHeader actor={actor} />
+
+        <Grid container spacing={5} style={{ padding: "15px" }}>
         <Grid size={{xs: 3}}>
           <div sx={{
             display: "flex",
@@ -55,8 +55,8 @@ const TemplateMoviePage = ({ movie, children }) => {
           {children}
         </Grid>
       </Grid>
-    </>
-  );
-};
-
-export default TemplateMoviePage;
+      </>
+    );
+  };
+  
+export default TemplateActorPage;

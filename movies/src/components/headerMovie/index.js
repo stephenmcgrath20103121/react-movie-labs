@@ -7,8 +7,7 @@ import Typography from "@mui/material/Typography";
 import HomeIcon from "@mui/icons-material/Home";
 import { useNavigate } from "react-router-dom";
 
-const MovieHeader = (props) => {
-  const movie = props.movie;
+const MovieHeader = (movie,actor) => {
   const navigate = useNavigate();
 
   return (
@@ -27,12 +26,16 @@ const MovieHeader = (props) => {
       </IconButton>
 
       <Typography variant="h4" component="h3">
-        {movie.title}
+        {movie ? movie.title : actor.name}
+        {movie?.homepage && (
         <a href={movie.homepage}>
           <HomeIcon color="primary" />
         </a>
+        )}
         <br />
+        {movie?.tagline && (
         <span sx={{ fontSize: "1.5rem" }}>{`   "${movie.tagline}"`} </span>
+        )}
       </Typography>
 
       <IconButton aria-label="go forward" onClick={() => navigate(+1) } >
